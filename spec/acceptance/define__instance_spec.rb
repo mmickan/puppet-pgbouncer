@@ -10,9 +10,11 @@ describe 'pgbouncer::instance defined type' do
         default_instance => false,
       }
       pgbouncer::instance { 'session':
+        listen_addr => '::',
         listen_port => 5432,
       }
       pgbouncer::instance { 'transaction':
+        listen_addr => '::',
         listen_port => 5433,
       }
       EOS
@@ -33,11 +35,11 @@ describe 'pgbouncer::instance defined type' do
     end
 
     describe port('5432') do
-      it { should be_listening }
+      it { should be_listening.with('tcp6') }
     end
 
     describe port('5433') do
-      it { should be_listening }
+      it { should be_listening.with('tcp6') }
     end
   end
 end
