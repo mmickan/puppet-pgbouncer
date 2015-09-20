@@ -140,6 +140,7 @@ define pgbouncer::instance(
         Package[$::pgbouncer::params::package_name],
         File[$_config_file],
         File[$_userlist_file],
+        File['/etc/default/pgbouncer'],
       ],
     }
   }
