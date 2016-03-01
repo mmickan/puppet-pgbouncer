@@ -100,6 +100,7 @@ define pgbouncer::instance(
   $_service_name  = "pgbouncer_${name}"
   $_config_file   = "/etc/pgbouncer/pgbouncer_${name}.ini"
   $_userlist_file = "/etc/pgbouncer/userlist_${name}.txt"
+  $_hba_file      = "/etc/pgbouncer/pg_hba_${name}.conf"
 
   if $::pgbouncer::service_restart and $::pgbouncer::service_manage {
     $_service_notify = Service[$_service_name]
@@ -114,6 +115,13 @@ define pgbouncer::instance(
     mode    => '0640',
     require => Package[$::pgbouncer::params::package_name],
     notify  => $_service_notify,
+  }
+
+  concat { $_hba_file:
+    owner  => 'postgres',
+    group  => 'postgres',
+    mode   => '0640',
+    notify => $_service_notify,
   }
 
   file { $_userlist_file:

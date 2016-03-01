@@ -29,5 +29,6 @@ RSpec.configure do |c|
 
     # Install dependencies
     on default, puppet('module', 'install', 'puppetlabs-stdlib'), { :acceptable_exit_codes => [0,1] }
+    on default, puppet('module', 'install', 'puppetlabs-concat'), { :acceptable_exit_codes => [0,1] }
   end
 end
