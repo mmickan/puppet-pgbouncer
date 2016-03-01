@@ -93,8 +93,6 @@ define pgbouncer::pg_hba_rule(
   validate_re($auth_method, '^(trust|reject|md5|password|peer|cert)$',
   "The auth_method you specified [${auth_method}] must be one of: trust, reject, md5, password, peer, cert")
 
-  $fragname = "pgbouncer_hba_rule_${name}"
-
   if is_array($database) {
     $databases = join($database, ',')
   } else {
@@ -107,6 +105,7 @@ define pgbouncer::pg_hba_rule(
     $users = $user
   }
 
+  $fragname = "pgbouncer_hba_rule_${name}"
   concat::fragment { $fragname:
     target  => "/etc/pgbouncer/pg_hba_${instance}.conf",
     content => template('pgbouncer/pg_hba_rule.conf'),

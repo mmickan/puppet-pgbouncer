@@ -11,7 +11,7 @@ describe 'pgbouncer::pg_hba_rule', :type => :define do
     'class { "pgbouncer": default_instance => true }'
   }
 
-  describe 'with defaults' do
+  describe 'host based access rule' do
     let(:params) { {
       :type        => 'host',
       :database    => 'all',
@@ -22,7 +22,7 @@ describe 'pgbouncer::pg_hba_rule', :type => :define do
     }
     it { should compile.with_all_deps }
 
-    it { should contain_concat__fragment('pg_hba_rule_test').with_content(
+    it { should contain_concat__fragment('pgbouncer_hba_rule_test').with_content(
       /host\s+all\s+all\s+127\.0\.0\.1\/32\s+trust/
     )}
   end
