@@ -38,7 +38,7 @@
 #
 # [*auth_type*]
 #   Method used by PgBouncer to authenticate client connections
-#   to PgBouncer. Values may be md5, crypt, plain, trust, or any. 
+#   to PgBouncer. Values may be hba, cert, md5, plain, trust, or any.
 #   Default: trust
 #
 # [*auth_list*] 
@@ -91,7 +91,7 @@ define pgbouncer::instance(
   validate_integer($listen_port)
   validate_string($admin_users)
   validate_string($stats_users)
-  validate_re($auth_type, '^(md5|crypt|plain|trust|any)$')
+  validate_re($auth_type, '^(hba|cert|md5|plain|trust|any)$')
   validate_array($auth_list)
   validate_re($pool_mode, '^(session|transaction|statement)$')
   validate_integer($max_client_conn)
