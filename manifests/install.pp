@@ -18,4 +18,23 @@ class pgbouncer::install {
     provider => $pgbouncer::params::package_provider,
   }
 
+  if $::pgbouncer::service_manage {
+    case $::pgbouncer::init_style {
+      'systemd': {
+        file { '/lib/systemd/system/pgbouncer@.service':
+          content => template('pgbouncer/pgbouncer_systemd.erb'),
+          owner   => 'root',
+          group   => 'root',
+          mode    => '0444',
+        } ~>
+        exec { 'pgbouncer-systemd-reload':
+          command     => 'systemctl daemon-reload',
+          path        => [ '/usr/bin', '/bin', '/usr/sbin' ],
+          refreshonly => true,
+        }
+      }
+      default: {}
+    }
+  }
+
 }

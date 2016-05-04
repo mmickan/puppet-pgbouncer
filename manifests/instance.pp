@@ -97,16 +97,9 @@ define pgbouncer::instance(
   validate_integer($max_client_conn)
   validate_integer($default_pool_size)
 
-  $_service_name  = "pgbouncer_${name}"
   $_config_file   = "/etc/pgbouncer/pgbouncer_${name}.ini"
   $_userlist_file = "/etc/pgbouncer/userlist_${name}.txt"
   $_hba_file      = "/etc/pgbouncer/pg_hba_${name}.conf"
-
-  if $::pgbouncer::service_restart and $::pgbouncer::service_manage {
-    $_service_notify = Service[$_service_name]
-  } else {
-    $_service_notify = undef
-  }
 
   file { $_config_file:
     content => template('pgbouncer/pgbouncer.ini.erb'),
@@ -114,14 +107,12 @@ define pgbouncer::instance(
     group   => 'postgres',
     mode    => '0640',
     require => Package[$::pgbouncer::params::package_name],
-    notify  => $_service_notify,
   }
 
   concat { $_hba_file:
     owner  => 'postgres',
     group  => 'postgres',
     mode   => '0640',
-    notify => $_service_notify,
   }
 
   file { $_userlist_file:
@@ -130,21 +121,62 @@ define pgbouncer::instance(
     group   => 'postgres',
     mode    => '0640',
     require => Package[$::pgbouncer::params::package_name],
-    notify  => $_service_notify,
   }
 
   if $::pgbouncer::service_manage {
-    file { "/etc/init.d/${_service_name}":
-      content => template('pgbouncer/pgbouncer_init.erb'),
-      owner   => 'root',
-      group   => 'root',
-      mode    => '0755',
-    } ->
+    case $::pgbouncer::init_style {
+      'upstart': {
+        $_service_name  = "pgbouncer_${name}"
+
+        file { "/etc/init/${_service_name}.conf":
+          content => template('pgbouncer/pgbouncer_upstart.erb'),
+          owner   => 'root',
+          group   => 'root',
+          mode    => '0444',
+          before  => Service[$_service_name],
+        }
+        file { "/etc/init.d/${_service_name}":
+          ensure => 'link',
+          target => '/lib/init/upstart-job',
+          owner  => 'root',
+          group  => 'root',
+          mode   => '0555',
+        }
+      }
+      'debian': {
+        $_service_name = "pgbouncer_${name}"
+        file { "/etc/init.d/${_service_name}":
+          content => template('pgbouncer/pgbouncer_debian.erb'),
+          owner   => 'root',
+          group   => 'root',
+          mode    => '0555',
+          before  => Service[$_service_name],
+        }
+      }
+      'systemd': {
+        $_service_name = "pgbouncer@${name}"
+        Exec['pgbouncer-systemd-reload'] -> Service[$_service_name]
+      }
+      default: {
+        fail("I don't know how to create an init script for ${::pgbouncer::init_style}")
+      }
+    }
+
+    if $::pgbouncer::service_restart {
+      $_service_subscribe = [
+        File[$_config_file],
+        File[$_hba_file],
+        File[$_userlist_file],
+      ]
+    } else {
+      $_service_subscribe = undef
+    }
 
     service { $_service_name:
-      ensure  => $::pgbouncer::service_ensure,
-      enable  => $::pgbouncer::service_enable,
-      require => [
+      ensure    => $::pgbouncer::service_ensure,
+      enable    => $::pgbouncer::service_enable,
+      subscribe => $_service_subscribe,
+      require   => [
         Package[$::pgbouncer::params::package_name],
         File[$_config_file],
         File[$_userlist_file],

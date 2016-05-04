@@ -24,6 +24,11 @@
 #   default instance is usually sufficient when only a single pgbouncer
 #   instance is required.
 #
+# [*init_style*]
+#   String.  The init system in use.
+#   Valid values: debian, upstart, systemd (others are easy to add though!)
+#   Default: depends on operating system and version.
+#
 # See the pgbouncer::instance defined type for an explanation of the
 # remaining paramaters.
 #
@@ -36,6 +41,7 @@ class pgbouncer (
   $service_manage   = true,
   $service_restart  = true,
   $default_instance = true,
+  $init_style       = $::pgbouncer::params::init_style,
 
   # defaults for per-pool settings
   $databases         = [],
