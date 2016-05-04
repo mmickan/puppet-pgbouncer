@@ -4,8 +4,8 @@ After=network.target
 
 [Service]
 User=postgres
-ExecStart=/usr/bin/pgbouncer /etc/pgbouncer/pgbouncer_%i.ini
-ExecReload=/usr/bin/pgbouncer -R /etc/pgbouncer/pgbouncer_%i.ini
+ExecStart=/usr/sbin/pgbouncer /etc/pgbouncer/pgbouncer_%i.ini
+ExecReload=/usr/sbin/pgbouncer -R /etc/pgbouncer/pgbouncer_%i.ini
 
 [Install]
 WantedBy=multi-user.target
