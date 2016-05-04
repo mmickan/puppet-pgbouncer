@@ -1,0 +1,15 @@
+# PgBouncer Upstart script
+
+description "PgBouncer"
+
+start on (net-device-up
+          and local-filesystems
+          and runlevel [2345])
+
+stop on runlevel [016]
+
+respawn
+
+respawn limit 10 30
+
+exec sudo -upostgres /usr/sbin/pgbouncer /etc/pgbouncer/pgbouncer_<%= @name %>.ini
