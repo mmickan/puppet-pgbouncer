@@ -58,6 +58,7 @@ class pgbouncer (
   validate_bool($service_manage)
   validate_bool($service_restart)
   validate_bool($default_instance)
+  validate_re($package_ensure, '^(absent|present|[\d\.\-]+)$', 'invalid $package_ensure')
 
   if $package_ensure == 'absent' {
     $service_ensure = 'stopped'
