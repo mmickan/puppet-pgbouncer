@@ -165,7 +165,7 @@ define pgbouncer::instance(
     if $::pgbouncer::service_restart {
       $_service_subscribe = [
         File[$_config_file],
-        File[$_hba_file],
+        Concat[$_hba_file],
         File[$_userlist_file],
       ]
     } else {
