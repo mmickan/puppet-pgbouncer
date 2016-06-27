@@ -20,9 +20,9 @@ describe 'pgbouncer::instance', :type => :define do
       context 'with defaults' do
         it { should compile.with_all_deps }
 
-        it { should contain_file('/etc/pgbouncer/pgbouncer_transaction.ini') }
-        it { should contain_file('/etc/pgbouncer/userlist_transaction.txt') }
-        it { should contain_concat('/etc/pgbouncer/pg_hba_transaction.conf') }
+        it { should contain_file('/etc/pgbouncer/pgbouncer_transaction.ini').that_requires('Package[pgbouncer]') }
+        it { should contain_file('/etc/pgbouncer/userlist_transaction.txt').that_requires('Package[pgbouncer]') }
+        it { should contain_concat('/etc/pgbouncer/pg_hba_transaction.conf').that_requires('Package[pgbouncer]') }
       end
 
       context 'with init_style = debian' do

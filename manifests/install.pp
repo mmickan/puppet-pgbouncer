@@ -14,7 +14,7 @@ class pgbouncer::install {
   }
 
   package{ 'pgbouncer':
-    name     => $pgbouncer::params::package_name:
+    name     => $pgbouncer::params::package_name,
     ensure   => $pgbouncer::package_ensure,
     provider => $pgbouncer::params::package_provider,
   }
