@@ -13,7 +13,8 @@ class pgbouncer::install {
     fail("Use of private class ${name} by ${caller_module_name}")
   }
 
-  package{ $pgbouncer::params::package_name:
+  package{ 'pgbouncer':
+    name     => $pgbouncer::params::package_name:
     ensure   => $pgbouncer::package_ensure,
     provider => $pgbouncer::params::package_provider,
   }

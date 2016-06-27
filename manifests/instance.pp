@@ -106,13 +106,14 @@ define pgbouncer::instance(
     owner   => 'postgres',
     group   => 'postgres',
     mode    => '0640',
-    require => Package[$::pgbouncer::params::package_name],
+    require => Package['pgbouncer'],
   }
 
   concat { $_hba_file:
-    owner  => 'postgres',
-    group  => 'postgres',
-    mode   => '0640',
+    owner   => 'postgres',
+    group   => 'postgres',
+    mode    => '0640',
+    require => Package['pgbouncer'],
   }
 
   file { $_userlist_file:
@@ -120,7 +121,7 @@ define pgbouncer::instance(
     owner   => 'postgres',
     group   => 'postgres',
     mode    => '0640',
-    require => Package[$::pgbouncer::params::package_name],
+    require => Package['pgbouncer'],
   }
 
   if $::pgbouncer::service_manage {
