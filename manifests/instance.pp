@@ -69,8 +69,8 @@
 #
 define pgbouncer::instance(
   $databases         = $::pgbouncer::databases,
-  $logfile           = "/var/log/postgresql/pgbouncer_${name}.log",
-  $pidfile           = "/var/run/postgresql/pgbouncer_${name}.pid",
+  $logfile           = "${::pgbouncer::logdir}/pgbouncer_${name}.log",
+  $pidfile           = "${::pgbouncer::piddir}/pgbouncer_${name}.pid",
   $listen_addr       = $::pgbouncer::listen_addr,
   $listen_port       = $::pgbouncer::listen_port,
   $admin_users       = $::pgbouncer::admin_users,
@@ -103,23 +103,23 @@ define pgbouncer::instance(
 
   file { $_config_file:
     content => template('pgbouncer/pgbouncer.ini.erb'),
-    owner   => 'postgres',
-    group   => 'postgres',
+    owner   => $::pgbouncer::user,
+    group   => $::pgbouncer::group,
     mode    => '0640',
     require => Package['pgbouncer'],
   }
 
   concat { $_hba_file:
-    owner   => 'postgres',
-    group   => 'postgres',
+    owner   => $::pgbouncer::user,
+    group   => $::pgbouncer::group,
     mode    => '0640',
     require => Package['pgbouncer'],
   }
 
   file { $_userlist_file:
     content => template('pgbouncer/userlist.txt.erb'),
-    owner   => 'postgres',
-    group   => 'postgres',
+    owner   => $::pgbouncer::user,
+    group   => $::pgbouncer::group,
     mode    => '0640',
     require => Package['pgbouncer'],
   }

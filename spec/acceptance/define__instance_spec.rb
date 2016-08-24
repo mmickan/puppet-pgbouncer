@@ -1,4 +1,12 @@
 require 'spec_helper_acceptance'
+require_relative './version.rb'
+
+case $init_style
+when 'systemd'
+  _service_prefix = 'pgbouncer@'
+else
+  _service_prefix = 'pgbouncer_'
+end
 
 describe 'pgbouncer::instance defined type' do
 
@@ -24,12 +32,12 @@ describe 'pgbouncer::instance defined type' do
       apply_manifest(pp, :catch_changes => true)
     end
 
-    describe service('pgbouncer_session') do
+    describe service("#{_service_prefix}session") do
       it { should be_enabled }
       it { should be_running }
     end
 
-    describe service('pgbouncer_transaction') do
+    describe service("#{_service_prefix}transaction") do
       it { should be_enabled }
       it { should be_running }
     end

@@ -4,10 +4,10 @@
 
 1. [Overview](#overview)
 2. [Module Description - What pgbouncer does and why it is useful](#module-description)
-3. [Setup - The basics of getting started with [pgbouncer]](#setup)
-    * [What [pgbouncer] affects](#what-[pgbouncer]-affects)
+3. [Setup - The basics of getting started with pgbouncer](#setup)
+    * [What pgbouncer affects](#what-pgbouncer-affects)
     * [Setup requirements](#setup-requirements)
-    * [Beginning with [pgbouncer]](#beginning-with-[pgbouncer])
+    * [Beginning with pgbouncer](#beginning-with-pgbouncer)
 4. [Usage - Configuration options and additional functionality](#usage)
 5. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
 5. [Limitations - OS compatibility, etc.](#limitations)
@@ -15,10 +15,8 @@
 
 ##Overview
 
-Deploy and configure [PgBouncer](http://pgbouncer.github.io).
-
-Tested with Ubuntu 14.04, but should work on other systems with minor
-tweaks.
+Deploy and configure [PgBouncer](http://pgbouncer.github.io), including
+multiple instances and host-based access control.
 
 ##Module Description
 
@@ -27,19 +25,34 @@ and manages one or more instances of the pgbouncer service.
 
 ##Setup
 
-###What [pgbouncer] affects
+###What pgbouncer affects
 
-* Deploys per-instance configuration to /etc/pgbouncer/pgbouncer_*.ini
-* Deploys per-instance user lists to /etc/pgbouncer/userlist_*.txt
-* Enables pgbouncer in /etc/default/pgbouncer
+* Deploys per-instance configuration to `/etc/pgbouncer/pgbouncer_*.ini`
+* Deploys per-instance user lists to `/etc/pgbouncer/userlist_*.txt`
+* Deploys per-instance host-based access configuration to
+    `/etc/pgbouncer/pg_hba_*.conf`
+* Enables pgbouncer in `/etc/default/pgbouncer`
 * Disables package-provided pgbouncer init script, deploys and enables
-    per-intsance init script.
+    per-instance init script
 
 ###Setup Requirements
 
-Requires the puppetlabs/stdlib module.
+* Requires the puppetlabs/stdlib module
+* Requires the puppetlabs/concat module if using host-based access
+* Requires the puppetlabs/postgresql module only for the package repo
 
-###Beginning with [pgbouncer]
+###Beginning with pgbouncer
+
+It is recommended that you use the puppetlabs/postgresql module to install
+the required repository:
+
+```puppet
+class { 'postgresql::globals':
+  manage_package_repo => true,
+  version             => '9.5',
+}
+Yumrepo<||> -> Package['pgbouncer']
+```
 
 The module provides sensible defaults for a single instance configuration.
 To deploy a transaction pooling instance only:
@@ -66,20 +79,28 @@ pgbouncer::instance { 'transaction':
 
 ##Usage
 
-Full documentation of parameters is included in the init.pp and instance.pp
-manifest files.
+Full documentation of parameters is included in the `init.pp`,
+`instance.pp`, and `pg_hba_rule.pp` manifest files.
 
 ##Reference
 
-Only the "pgbouncer" class and the "pgbouncer::instance" defined type should
-be instantiated directly - all other classes are private.
+Only the `pgbouncer` class and the `pgbouncer::instance` and
+`pgbouncer::pg_hba_rule` defined type should be instantiated directly - all
+other classes are private.
 
 ##Limitations
 
-Currently this module will fail if $::osfamily is not Debian, and it's only
-been tested on Ubuntu 14.04.  Support for other operating systems and
-distributions should be a simple matter; most of the basic structure is
-already in place.
+Tested on:
+
+* CentOS 7
+* Debian 8
+* Ubuntu 14.04
+* Ubuntu 16.04
+
+Tested using:
+
+* Puppet 3.8
+* Puppet 4.6
 
 ##Development
 
@@ -92,8 +113,5 @@ ensure your commit message clearly explains the problem your patch solves.
 
 ##Contributors
 
-Written by Mark Mickan <mark.mickan@blackboard.com>.
-
-Thanks to Michael Speth for the
-[landcareresearch/pgbouncer](https://bitbucket.org/landcareresearch/puppet-pgbouncer)
-module, which parts of this module are based on.
+* Mark Mickan (mmickan)
+* Anton Fletcher (salmonmoose)

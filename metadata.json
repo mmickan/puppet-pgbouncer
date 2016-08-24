@@ -1,19 +1,38 @@
 {
   "name": "mmickan-pgbouncer",
-  "version": "0.1.0",
-  "source": "https://github.com/mmickan/puppet-pgbouncer",
+  "version": "0.2.0",
   "author": "mmickan",
+  "summary": "Installs, configures, and manages one or more instances of PgBouncer",
+  "description": "Module for PgBouncer configuration",
   "license": "GPL-3.0+",
-  "summary": "Deploy and configure pgbouncer",
-  "description": "",
+  "source": "https://github.com/mmickan/puppet-pgbouncer",
   "project_page": "https://github.com/mmickan/puppet-pgbouncer",
+  "issues_url": "https://github.com/mmickan/puppet-pgbouncer/issues",
   "dependencies": [
     {
       "name": "puppetlabs/stdlib",
       "version_requirement": ">=4.2.0 <5.0.0"
+    },
+    {
+      "name": "puppetlabs/concat"
+    },
+    {
+      "name": "puppetlabs/postgresql"
     }
   ],
   "operatingsystem_support": [
+    {
+      "operatingsystem": "CentOS",
+      "operatingsystemrelease": [
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "Debian",
+      "operatingsystemrelease": [
+        "8"
+      ]
+    },
     {
       "operatingsystem": "Ubuntu",
       "operatingsystemrelease": [

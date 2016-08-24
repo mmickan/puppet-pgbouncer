@@ -14,9 +14,32 @@ class pgbouncer::install {
   }
 
   package{ 'pgbouncer':
-    name     => $pgbouncer::params::package_name,
     ensure   => $pgbouncer::package_ensure,
+    name     => $pgbouncer::params::package_name,
     provider => $pgbouncer::params::package_provider,
+  }
+
+  if $::pgbouncer::user_manage {
+    user { $::pgbouncer::user:
+      ensure  => 'present',
+      system  => true,
+      gid     => $::pgbouncer::group,
+      # at least on Ubuntu, pgbouncer depends on the postgresql-common
+      # package which provides the postgres user (and there's no harm in
+      # this require on systems where that's not the case)
+      require => Package['pgbouncer'],
+    }
+  }
+
+  if $::pgbouncer::group_manage {
+    group { $::pgbouncer::group:
+      ensure  => 'present',
+      system  => true,
+      # at least on Ubuntu, pgbouncer depends on the postgresql-common
+      # package which provides the postgres group (and there's no harm in
+      # this require on systems where that's not the case)
+      require => Package['pgbouncer'],
+    }
   }
 
   if $::pgbouncer::service_manage {

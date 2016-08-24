@@ -13,9 +13,23 @@ class pgbouncer::params {
     'debian': {
       $package_name     = 'pgbouncer'
       $package_provider = undef
+      $user             = 'postgres'
+      $group            = 'postgres'
+      $piddir           = '/var/run/postgresql'
+      $logdir           = '/var/log/postgresql'
+      $bindir           = '/usr/sbin'
+    }
+    'redhat': {
+      $package_name     = 'pgbouncer'
+      $package_provider = undef
+      $user             = 'pgbouncer'
+      $group            = 'pgbouncer'
+      $piddir           = '/var/run/pgbouncer'
+      $logdir           = '/var/log/pgbouncer'
+      $bindir           = '/usr/bin'
     }
     default: {
-      fail("Unsupported OS ${::osfamily}.  Please use a debian based system")
+      fail("Unsupported OS family ${::osfamily}")
     }
   }
 

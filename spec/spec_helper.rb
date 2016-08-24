@@ -1,26 +1,20 @@
-require 'simplecov'
-SimpleCov.start do
-    add_filter '/spec/'
-    add_filter '/pkg/'
-    add_filter '/.vendor/'
-end
-
 require 'puppetlabs_spec_helper/module_spec_helper'
+require 'rspec-puppet-facts'
 
-require 'rspec-puppet'
-fixture_path = File.expand_path(File.join(__FILE__, '..', 'fixtures'))
-RSpec.configure do |c|
-  # Readable test descriptions
-  c.formatter = :documentation
+include RspecPuppetFacts
 
-  c.module_path = File.join(fixture_path, 'modules')
-  c.manifest_dir = File.join(fixture_path, 'manifests')
+require 'simplecov'
+require 'simplecov-console'
+
+SimpleCov.start do
+  add_filter '/spec'
+  add_filter '/vendor'
+  formatter SimpleCov::Formatter::MultiFormatter::new([
+    SimpleCov::Formatter::HTMLFormatter,
+    SimpleCov::Formatter::Console,
+  ])
 end
 
-SUPPORTED =
-    [
-      { 'fam' => 'Debian', 'name' => 'Ubuntu', 'rel' => '14.04' },
-      { 'fam' => 'Debian', 'name' => 'Ubuntu', 'rel' => '16.04' },
-      { 'fam' => 'Debian', 'name' => 'Debian', 'rel' => '7.0' },
-      { 'fam' => 'Debian', 'name' => 'Debian', 'rel' => '8.0' },
-    ]
+RSpec.configure do |c|
+  c.hiera_config = File.expand_path(File.join(__FILE__, '../fixtures/hiera.yaml'))
+end
