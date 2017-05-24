@@ -15,6 +15,8 @@ ExecStart=<%= scope.lookupvar('pgbouncer::bindir') %>/pgbouncer /etc/pgbouncer/p
 ExecReload=/usr/bin/kill -HUP $MAINPID
 KillSignal=SIGINT
 
+LimitNOFILE=32768
+
 # Give a reasonable amount of time for the server to start up/shut down
 TimeoutSec=300
 
