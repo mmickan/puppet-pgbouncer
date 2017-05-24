@@ -128,6 +128,7 @@ define pgbouncer::instance(
     case $::pgbouncer::init_style {
       'upstart': {
         $_service_name  = "pgbouncer_${name}"
+        $_service_restart = undef
 
         file { "/etc/init/${_service_name}.conf":
           content => template('pgbouncer/pgbouncer_upstart.erb'),
@@ -146,6 +147,8 @@ define pgbouncer::instance(
       }
       'debian': {
         $_service_name = "pgbouncer_${name}"
+        $_service_restart = undef
+
         file { "/etc/init.d/${_service_name}":
           content => template('pgbouncer/pgbouncer_debian.erb'),
           owner   => 'root',
@@ -156,6 +159,7 @@ define pgbouncer::instance(
       }
       'systemd': {
         $_service_name = "pgbouncer@${name}"
+        $_service_restart = "/usr/bin/systemctl reload pgbouncer@${name}"
         Exec['pgbouncer-systemd-reload'] -> Service[$_service_name]
       }
       default: {
@@ -176,6 +180,7 @@ define pgbouncer::instance(
     service { $_service_name:
       ensure    => $::pgbouncer::service_ensure,
       enable    => $::pgbouncer::service_enable,
+      restart   => $_service_restart,
       subscribe => $_service_subscribe,
       require   => [
         Package[$::pgbouncer::params::package_name],

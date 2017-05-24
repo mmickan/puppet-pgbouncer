@@ -12,7 +12,7 @@ Group=<%= scope.lookupvar('pgbouncer::group') %>
 PIDFile=<%= scope.lookupvar('pgbouncer::piddir') %>/pgbouncer_%i.pid
 
 ExecStart=<%= scope.lookupvar('pgbouncer::bindir') %>/pgbouncer /etc/pgbouncer/pgbouncer_%i.ini
-ExecReload=<%= scope.lookupvar('pgbouncer::bindir') %>/pgbouncer -R /etc/pgbouncer/pgbouncer_%i.ini
+ExecReload=/usr/bin/kill -HUP $MAINPID
 KillSignal=SIGINT
 
 # Give a reasonable amount of time for the server to start up/shut down
