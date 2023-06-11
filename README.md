@@ -1,6 +1,10 @@
-#pgbouncer
+**This repository has been archived**
 
-####Table of Contents
+This puppet module hasn't been updated for a long time.  You should probably consider using an actively maintained module instead.
+
+# pgbouncer
+
+#### Table of Contents
 
 1. [Overview](#overview)
 2. [Module Description - What pgbouncer does and why it is useful](#module-description)
@@ -13,19 +17,19 @@
 5. [Limitations - OS compatibility, etc.](#limitations)
 6. [Development - Guide for contributing to pgbouncer](#development)
 
-##Overview
+## Overview
 
 Deploy and configure [PgBouncer](http://pgbouncer.github.io), including
 multiple instances and host-based access control.
 
-##Module Description
+## Module Description
 
 This module downloads and installs the package, writes configuration files
 and manages one or more instances of the pgbouncer service.
 
-##Setup
+## Setup
 
-###What pgbouncer affects
+### What pgbouncer affects
 
 * Deploys per-instance configuration to `/etc/pgbouncer/pgbouncer_*.ini`
 * Deploys per-instance user lists to `/etc/pgbouncer/userlist_*.txt`
@@ -35,13 +39,13 @@ and manages one or more instances of the pgbouncer service.
 * Disables package-provided pgbouncer init script, deploys and enables
     per-instance init script
 
-###Setup Requirements
+### Setup Requirements
 
 * Requires the puppetlabs/stdlib module
 * Requires the puppetlabs/concat module if using host-based access
 * Requires the puppetlabs/postgresql module only for the package repo
 
-###Beginning with pgbouncer
+### Beginning with pgbouncer
 
 It is recommended that you use the puppetlabs/postgresql module to install
 the required repository:
@@ -77,18 +81,18 @@ pgbouncer::instance { 'transaction':
 }
 ```
 
-##Usage
+## Usage
 
 Full documentation of parameters is included in the `init.pp`,
 `instance.pp`, and `pg_hba_rule.pp` manifest files.
 
-##Reference
+## Reference
 
 Only the `pgbouncer` class and the `pgbouncer::instance` and
 `pgbouncer::pg_hba_rule` defined type should be instantiated directly - all
 other classes are private.
 
-##Limitations
+## Limitations
 
 Tested on:
 
@@ -102,7 +106,7 @@ Tested using:
 * Puppet 3.8
 * Puppet 4.6
 
-##Development
+## Development
 
 Contributions are welcome.  Open an
 [issue](https://github.com/mmickan/puppet-pgbouncer/issues) or
@@ -111,7 +115,7 @@ request](https://github.com/mmickan/puppet-pgbouncer/pulls).  Passing tests
 are appreciated with pull requests, but not a hard requirement.  Please
 ensure your commit message clearly explains the problem your patch solves.
 
-##Contributors
+## Contributors
 
 * Mark Mickan (mmickan)
 * Anton Fletcher (salmonmoose)
